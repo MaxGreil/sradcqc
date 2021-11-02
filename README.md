@@ -1,6 +1,6 @@
 # sradcqc
 
-Proof of concept of a SRA to compressed FASTQ pipeline with Nextflow.
+Proof of concept of a SRA to compressed FASTQ with Quality Control pipeline with Nextflow.
 
 ## Prerequisites
 
