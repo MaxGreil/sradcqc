@@ -18,12 +18,12 @@ Proof of concept of a SRA to compressed FASTQ (including quality control) pipeli
 
 ### Quick start
 
-You must give in the SRA ID to download the .fastq files from. Optionally, you can specify the Nextflow output directory with a flag. By default, all resulting files will be saved in folder `data`.
-
 Example run:
 ```
 nextflow run main.nf --sra_id SRR000001
 ```
+
+You must give in the SRA ID to download the .fastq files from. Optionally, you can specify the Nextflow output directory with a flag. By default, all resulting files will be saved in folder `data`.
 
 ## Installation
 
