@@ -23,7 +23,7 @@ Example run:
 nextflow run main.nf --sra_id SRR000001
 ```
 
-You must give in the SRA ID to download the .fastq files from. Optionally, you can specify the Nextflow output directory with a flag. By default, all resulting files will be saved in folder `data`.
+You must give in the SRA ID to download the .fastq files from. Optionally, you can specify the Nextflow output directory with flag `--outdir <folder>`. By default, all resulting files will be saved in folder `data`.
 
 ## Installation
 
