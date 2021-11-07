@@ -5,8 +5,8 @@ Proof of concept of a SRA to compressed FASTQ (including quality control) pipeli
 ## Prerequisites
 
 * Unix-like OS (Linux, macOS, etc.)
-* [Java](http://jdk.java.net/) version 8
-* [Docker](https://www.docker.com/) engine 1.10.x (or later)
+* [Java](https://openjdk.java.net/install/) version 8
+* [Docker](https://docs.docker.com/engine/install/) engine 1.10.x (or later)
 * Working internet connection
 
 ## Table of Contents
