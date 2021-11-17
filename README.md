@@ -79,7 +79,7 @@ This pipeline is designed to:
 The pipeline is built using [Nextflow](https://www.nextflow.io/)
 and processes data using the following steps:
 
-* [fasterq-dump](https://github.com/ncbi/sra-tools/blob/master/tools/fasterq-dump/readme.txt) - extract the fastq file[s] from a sample SRA ID
-* [pigz](https://zlib.net/pigz/) - compress downloaded fastq file[s] to .gz
-* [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) - read quality control
-* [MultiQC](https://multiqc.info) - aggregate report, describing results of the whole pipeline
+1. [fasterq-dump](https://github.com/ncbi/sra-tools/blob/master/tools/fasterq-dump/readme.txt) - extract the fastq file[s] from a sample SRA ID
+2. [pigz](https://zlib.net/pigz/) - compress downloaded fastq file[s] to .gz
+3. [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) - read quality control
+4. [MultiQC](https://multiqc.info) - aggregate report, describing results of the whole pipeline
