@@ -1,5 +1,7 @@
-/* 
- * enables modules 
+#!/usr/bin/env nextflow
+
+/*
+ * enables modules
  */
 nextflow.enable.dsl=2
 
@@ -12,25 +14,25 @@ params.sra_id = "" //SRR000001
 params.outdir = "data"
 
 log.info """\
-         S R A  T O  F A S T Q  -  C O M P R E S S  A N D  Q U A L I T Y  C O N T R O L  -  P I P E L I N E    
+         S R A  T O  F A S T Q  -  C O M P R E S S  A N D  Q U A L I T Y  C O N T R O L  -  P I P E L I N E
          ===================================
          sra_id: ${params.sra_id}
          outdir: ${params.outdir}
          """
          .stripIndent()
-         
+
 include { sradcqcFlow } from './sradcqc-flow.nf'
-         
-/* 
+
+/*
  * main script flow
  */
 workflow {
-    
+
     sradcqcFlow( params.sra_id )
 
 }
 
-/* 
+/*
  * completion handler
  */
 workflow.onComplete {
@@ -40,5 +42,5 @@ workflow.onComplete {
     } else {
         log.info ("\nPlease give in SRA identifier to download via --sra_id <SRA identifier> \n" )
     }
-    
+
 }
