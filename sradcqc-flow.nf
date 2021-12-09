@@ -24,7 +24,6 @@ workflow sradcqcFlow {
     main:
       if (sra_id) { 
         DOWNLOAD()
-        println(DOWNLOAD.out.verbiage)
         COMPRESS(DOWNLOAD.out)
         FASTQC(COMPRESS.out)
         MULTIQC(FASTQC.out)
