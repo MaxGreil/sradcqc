@@ -7,3 +7,4 @@ dependencies:
   - fastqc=0.11.8
   - multiqc=1.6
   - sra-tools=2.11.0
+  - bbmap=38.93

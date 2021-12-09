@@ -1,6 +1,17 @@
 #!/usr/bin/env nextflow
 
 /*
+ * Pipeline steps:
+ * 1. Pre-processing sra/fastq
+ * 1a. SRA tools -- fastqer-dump sra to generate fastq file
+ * 1b. pigz fastq -- compress fastq files for storage
+ * 1c. FastQC (pre-trim) -- perform pre-trim FastQC on fastq files
+ * 2. Trimming
+ * 2a. BBDuk -- trim fastq files for quality and adapters
+ * 2b. FastQC (post-trim) -- perform post-trim FastQC on fastq files (ensure trimming performs as expected)
+ */
+
+/*
  * enables modules
  */
 nextflow.enable.dsl=2
@@ -9,9 +20,8 @@ nextflow.enable.dsl=2
  * Default pipeline parameters. They can be overriden on the command line eg.
  * given `params.foo` specify on the run command line `--foo some_value`.
  */
-
 params.sra_id = "" //SRR000001
-params.outdir = "data"
+params.outdir = "output"
 
 log.info """\
          S R A  T O  F A S T Q  -  C O M P R E S S  A N D  Q U A L I T Y  C O N T R O L  -  P I P E L I N E
@@ -27,7 +37,7 @@ include { sradcqcFlow } from './sradcqc-flow.nf'
  * main script flow
  */
 workflow {
-
+	
     sradcqcFlow( params.sra_id )
 
 }

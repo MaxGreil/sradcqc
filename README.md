@@ -23,7 +23,7 @@ Example run:
 nextflow run main.nf --sra_id SRR000001
 ```
 
-You must give in the SRA ID to download the .fastq files from. Optionally, you can specify the Nextflow output directory with flag `--outdir <folder>`. By default, all resulting files will be saved in folder `data`.
+You must give in the SRA ID to download the .fastq files from. Optionally, you can specify the Nextflow output directory with flag `--outdir <folder>`. By default, all resulting files will be saved in folder `output` and folder `info` will contain all information about the last run nextflow session.
 
 Potential SRA IDs for download can be inspected using the [SRA Explorer](https://sra-explorer.info/).
 
@@ -79,7 +79,7 @@ This pipeline is designed to:
 The pipeline is built using [Nextflow](https://www.nextflow.io/)
 and processes data using the following steps:
 
-1. [fasterq-dump](https://github.com/ncbi/sra-tools/blob/master/tools/fasterq-dump/readme.txt) - extract the fastq file[s] from a sample SRA ID
+1. [fasterq-dump](https://github.com/ncbi/sra-tools/wiki/HowTo:-fasterq-dump) - extract the fastq file[s] from a sample SRA ID
 2. [pigz](https://zlib.net/pigz/) - compress downloaded fastq file[s] to .gz
 3. [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) - read quality control
 4. [MultiQC](https://multiqc.info) - aggregate report, describing results of the whole pipeline

@@ -2,9 +2,10 @@ FROM ubuntu:21.04
 MAINTAINER Maximilian Greil
 
 # Install procps so that Nextflow can poll CPU usage and
+# install graphviz so that Nextflow can render the execution DAG in the required format and
 # deep clean the apt cache to reduce image/layer size
 RUN apt-get update && \
-    apt-get install -y wget pigz procps locales && \
+    apt-get install -y wget pigz procps locales graphviz && \
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists/* && \
     # For MultiQC

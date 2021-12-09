@@ -1,5 +1,3 @@
-params.outdir = "data"
-
 process DOWNLOAD {  
 
     output:
@@ -58,3 +56,18 @@ process MULTIQC {
     """
 }
 
+process FASTQC_TRIM {
+
+    input:
+    file fastqgz_ch
+    
+    output:
+    path("fastqc_${params.sra_id}_trim_logs")
+    
+    script:
+    """
+    mkdir -p fastqc_${params.sra_id}_trim_logs
+    fastqc -o fastqc_${params.sra_id}_trim_logs $fastqgz_ch
+    """
+    
+}
