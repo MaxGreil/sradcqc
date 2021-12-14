@@ -21,7 +21,7 @@ log.info """\
          """
          .stripIndent()
 
-include { sradcqcFlow } from './sradcqc-flow.nf'
+include { sradcqcFlow } from './modules/sradcqc-flow.nf'
 
 if (!params.sra_id) {
    exit 1, "\nPlease give in SRA identifier to download via --sra_id <SRA identifier> \n"

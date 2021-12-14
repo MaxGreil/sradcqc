@@ -1,8 +1,7 @@
 /* 
  * include requires tasks 
  */
-include { INFO; PREFETCH; CONVERT; COMPRESS; FASTQC; MULTIQC; } from './modules/sradcqc-tasks.nf'
-
+include { INFO; PREFETCH; CONVERT; COMPRESS; FASTQC; MULTIQC; } from './sradcqc-tasks.nf'
 
 /* 
  * define the data analysis workflow 
