@@ -1,17 +1,8 @@
 /* 
  * include requires tasks 
  */
-include { DOWNLOAD; COMPRESS; FASTQC; MULTIQC; FASTQC_TRIM} from './sradcqc-tasks.nf'
+include { INFO; PREFETCH; CONVERT; COMPRESS; FASTQC; MULTIQC; } from './modules/sradcqc-tasks.nf'
 
-
-/*
- * Create a channel for input read files
- */
-if (params.singleEnd) {
-
-} else {
-
-}
 
 /* 
  * define the data analysis workflow 
@@ -22,10 +13,12 @@ workflow sradcqcFlow {
       sra_id
     // workflow implementation
     main:
-      if (sra_id) { 
-        DOWNLOAD()
-        COMPRESS(DOWNLOAD.out)
-        FASTQC(COMPRESS.out)
-        MULTIQC(FASTQC.out)
-      } 
+      INFO()
+      INFO.out.view()
+      PREFETCH()
+      CONVERT(PREFETCH.out)
+      COMPRESS(CONVERT.out)
+      FASTQC(CONVERT.out)
+      MULTIQC(FASTQC.out)
+      //missing: adapter removing and quality trim using BBDUK
 }

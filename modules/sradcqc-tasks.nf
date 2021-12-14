@@ -5,7 +5,7 @@ process INFO {
     
     script:
     """
-    vdb-dump --info ${sra_id}
+    vdb-dump --info $params.sra_id
     """
 
 }
@@ -17,7 +17,7 @@ process PREFETCH {
     
     script:
     """
-    prefetch ${sra_id}
+    prefetch $params.sra_id
     """
     
 }
@@ -32,7 +32,7 @@ process CONVERT {
     
     script:
     """
-    fasterq-dump -e $task.cpus ${sra_id}
+    fasterq-dump -e $task.cpus $params.sra_id
     """
     
 }
@@ -75,10 +75,26 @@ process MULTIQC {
     path('*')
 
     output:
-    path('multiqc_report_${params.sra_id}.html')
+    path('multiqc_report.html')
 
     script:
     """
     multiqc .
     """
+}
+
+process FASTQC_TRIM {
+
+    input:
+    file fastqgz_ch
+    
+    output:
+    path("fastqc_${params.sra_id}_trim_logs")
+    
+    script:
+    """
+    mkdir -p fastqc_${params.sra_id}_trim_logs
+    fastqc -o fastqc_${params.sra_id}_trim_logs $fastqgz_ch
+    """
+    
 }

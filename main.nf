@@ -1,17 +1,6 @@
 #!/usr/bin/env nextflow
 
 /*
- * Pipeline steps:
- * 1. Pre-processing sra/fastq
- * 1a. SRA tools -- fastqer-dump sra to generate fastq file
- * 1b. pigz fastq -- compress fastq files for storage
- * 1c. FastQC (pre-trim) -- perform pre-trim FastQC on fastq files
- * 2. Trimming
- * 2a. BBDuk -- trim fastq files for quality and adapters
- * 2b. FastQC (post-trim) -- perform post-trim FastQC on fastq files (ensure trimming performs as expected)
- */
-
-/*
  * enables modules
  */
 nextflow.enable.dsl=2
@@ -26,12 +15,17 @@ params.outdir = "output"
 log.info """\
          S R A  T O  F A S T Q  -  C O M P R E S S  A N D  Q U A L I T Y  C O N T R O L  -  P I P E L I N E
          ===================================
-         sra_id: ${params.sra_id}
-         outdir: ${params.outdir}
+         sra_id:     ${params.sra_id}
+         outdir:     ${params.outdir}
+         tracedir:   ${params.tracedir}
          """
          .stripIndent()
 
 include { sradcqcFlow } from './sradcqc-flow.nf'
+
+if (!params.sra_id) {
+   exit 1, "\nPlease give in SRA identifier to download via --sra_id <SRA identifier> \n"
+}
 
 /*
  * main script flow
@@ -47,10 +41,6 @@ workflow {
  */
 workflow.onComplete {
 
-    if( params.sra_id ) {
-    	log.info (workflow.success ? "\nDone! Open the following report in your browser --> $params.outdir/multiqc_report.html\n" : "Oops .. something went wrong" )
-    } else {
-        log.info ("\nPlease give in SRA identifier to download via --sra_id <SRA identifier> \n" )
-    }
+    log.info ( workflow.success ? "\nDone! Open the following reports in your browser --> $params.outdir/multiqc_report_${params.sra_id}.html and $params.tracedir/execution_report.html\n" : "Oops .. something went wrong" )
 
 }
