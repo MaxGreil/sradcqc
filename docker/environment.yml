@@ -8,4 +8,3 @@ dependencies:
   - multiqc=1.6
   - sra-tools=2.11.0
   - bbmap=38.93
-  - parallel-fastq-dump=0.6.3
