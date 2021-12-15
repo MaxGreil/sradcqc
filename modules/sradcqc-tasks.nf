@@ -1,38 +1,44 @@
-process INFO {
-
+process SRAIDs {
+	
     output:
-    stdout
-    
+    file 'sra.txt'
+	
     script:
     """
-    vdb-dump --info $params.sra_id
+    esearch -db sra -query $params.sra_id | efetch -format runinfo | grep SRR | cut -d ',' -f 1 > sra.txt
     """
-
 }
 
 process PREFETCH {
     
+    tag "${meta.id}"
+    
+    input:
+    val meta
+    
     output:
-    path('*')
+    tuple val(meta), path('*')
     
     script:
     """
-    prefetch $params.sra_id
+    prefetch $meta.id
     """
     
 }
 
 process CONVERT {  
 
+    tag "${meta.id}"
+
     input:
-    path('*')
+    tuple val(meta), path('*')
 
     output:
-    file '*.fastq'
+    tuple val(meta), file('*.fastq.gz')
     
     script:
     """
-    fasterq-dump -e $task.cpus $params.sra_id
+    fasterq-dump -e $task.cpus $meta.id
     """
     
 }
@@ -40,11 +46,13 @@ process CONVERT {
 process COMPRESS {
     publishDir params.outdir, mode:'copy'  
     
+    tag "${meta.id}"
+    
     input:
-    file fastq_ch
+    tuple val(meta), val(fastq_ch)
     
     output:
-    file '*.fastq.gz'
+    tuple val(meta), file('*.fastq.gz')
     
     script:
     """
@@ -54,16 +62,18 @@ process COMPRESS {
 
 process FASTQC {
 
+    tag "${meta.id}"
+
     input:
-    file fastqgz_ch
+    tuple val(meta), val(fastqgz_ch)
     
     output:
-    path("fastqc_${params.sra_id}_logs")
+    tuple val(meta), path("fastqc_${meta.id}_logs")
     
     script:
     """
-    mkdir -p fastqc_${params.sra_id}_logs
-    fastqc -t $task.cpus -o fastqc_${params.sra_id}_logs $fastqgz_ch
+    mkdir -p fastqc_${meta.id}_logs
+    fastqc -t $task.cpus -o fastqc_${meta.id}_logs $fastqgz_ch
     """
 
 }
@@ -72,10 +82,10 @@ process MULTIQC {
     publishDir params.outdir, mode:'copy'
 
     input:
-    path('*')
+    tuple val(meta), path('*')
 
     output:
-    path('multiqc_report_${params.sra_id}.html')
+    path('multiqc_report_${meta.id}.html')
 
     script:
     """
