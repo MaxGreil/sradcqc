@@ -10,15 +10,29 @@ workflow sradcqcFlow {
     // required inputs
     take:
       sra_id
+      input
     // workflow implementation
     main:
-      SRAIDs()
+      if(input) {
       
-      SRAIDs.out
-      	.splitText()
-      	.map { it -> ['id': it.trim()] }
-      	.set { singleSRAId }
+        Channel.fromPath(params.input, checkIfExists: true)
+          .splitCsv(header: true, sep: '\t', strip: true)
+          .map ({ row -> ['id': row.run_accession] })
+          .set { singleSRAId }
+          
+
+      
+      } else {
+      
+        SRAIDs()
+      
+        SRAIDs.out
+      	  .splitText()
+      	  .map { it -> ['id': it.trim()] }
+      	  .set { singleSRAId }
       	
+      }
+      
       PREFETCH(singleSRAId)
       
       CONVERT(PREFETCH.out)

@@ -10,12 +10,14 @@ nextflow.enable.dsl=2
  * given `params.foo` specify on the run command line `--foo some_value`.
  */
 params.sra_id = "" //SRR000001
+params.input  = ""
 params.outdir = "output"
 
 log.info """\
          S R A  T O  F A S T Q  -  C O M P R E S S  A N D  Q U A L I T Y  C O N T R O L  -  P I P E L I N E
          ===================================
          sra_id:     ${params.sra_id}
+         table:      ${params.input}
          outdir:     ${params.outdir}
          tracedir:   ${params.tracedir}
          """
@@ -23,8 +25,8 @@ log.info """\
 
 include { sradcqcFlow } from './modules/sradcqc-flow.nf'
 
-if (!params.sra_id) {
-   exit 1, "\nPlease give in SRA identifier to download via --sra_id <SRA identifier> \n"
+if (!params.sra_id && !params.input) {
+   exit 1, "\nPlease either give in SRA identifier via --sra_id <SRA identifier> or a table with SRA identifiers via --input <table>\n"
 }
 
 /*
@@ -32,7 +34,7 @@ if (!params.sra_id) {
  */
 workflow {
 	
-    sradcqcFlow( params.sra_id )
+    sradcqcFlow( params.sra_id, params.input)
 
 }
 

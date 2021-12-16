@@ -1,5 +1,5 @@
 process SRAIDs {
-	
+
     output:
     file 'sra.txt'
 	

@@ -21,6 +21,8 @@ Proof of concept of a SRA to compressed FASTQ (including quality control) pipeli
 Example run:
 ```
 nextflow run main.nf --sra_id SRR000001
+
+nextflow run main.nf --input input/SRR000001.tsv
 ```
 
 You must give in the SRA ID to download the .fastq files from. Optionally, you can specify the Nextflow output directory with flag `--outdir <folder>`. By default, all resulting files will be saved in folder `output` and folder `info` will contain all information about the last run nextflow session.
@@ -61,6 +63,7 @@ cd docker && docker image build . -t maxgreil/sradcqc
 | Argument  | Usage                            | Description                                                          |
 |-----------|----------------------------------|----------------------------------------------------------------------|
 | --sra_id  | \<id\>                           | SRA ID to download the .fastq files from                             |
+| --input   | \<id\>                           | Table with SRA IDs to download the .fastq files from                 |
 
 ### Optional Arguments
 | Argument  | Usage                            | Description                                                          |
