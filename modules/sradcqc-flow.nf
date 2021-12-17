@@ -13,8 +13,8 @@ workflow sradcqcFlow {
       input
     // workflow implementation
     main:
-      if(input) {
       
+      if(input) {
         Channel.fromPath(params.input, checkIfExists: true)
           .splitCsv(header: true, sep: '\t', strip: true)
           .map ({ row -> ['id': row.run_accession] })

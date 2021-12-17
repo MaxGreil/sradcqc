@@ -34,7 +34,7 @@ process CONVERT {
     tuple val(meta), path('*')
 
     output:
-    tuple val(meta), file('*.fastq.gz')
+    tuple val(meta), file('*.fastq')
     
     script:
     """
@@ -44,12 +44,12 @@ process CONVERT {
 }
 
 process COMPRESS {
-    publishDir params.outdir, mode:'copy'  
+    publishDir params.outdir, pattern:'*.fastq.gz' , mode:'copy'  
     
     tag "${meta.id}"
     
     input:
-    tuple val(meta), val(fastq_ch)
+    tuple val(meta), file(fastq_ch)
     
     output:
     tuple val(meta), file('*.fastq.gz')
@@ -65,7 +65,7 @@ process FASTQC {
     tag "${meta.id}"
 
     input:
-    tuple val(meta), val(fastqgz_ch)
+    tuple val(meta), file(fastqgz_ch)
     
     output:
     tuple val(meta), path("fastqc_${meta.id}_logs")
@@ -79,13 +79,15 @@ process FASTQC {
 }
 
 process MULTIQC {
-    publishDir params.outdir, mode:'copy'
-
+    publishDir params.outdir, saveAs: { filename -> "multiqc_report_${meta.id}.html" }, mode:'copy'
+	
+    tag "${meta.id}"	
+	
     input:
     tuple val(meta), path('*')
 
     output:
-    path('multiqc_report_${meta.id}.html')
+    path('multiqc_report.html')
 
     script:
     """

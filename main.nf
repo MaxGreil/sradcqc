@@ -25,7 +25,7 @@ log.info """\
 
 include { sradcqcFlow } from './modules/sradcqc-flow.nf'
 
-if (!params.sra_id && !params.input) {
+if ((!params.sra_id && !params.input) || (params.sra_id && params.input)) {
    exit 1, "\nPlease either give in SRA identifier via --sra_id <SRA identifier> or a table with SRA identifiers via --input <table>\n"
 }
 
