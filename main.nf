@@ -26,7 +26,9 @@ log.info """\
 include { sradcqcFlow } from './modules/sradcqc-flow.nf'
 
 if ((!params.sra_id && !params.input) || (params.sra_id && params.input)) {
-   exit 1, "\nPlease either give in SRA identifier via --sra_id <SRA identifier> or a table with SRA identifiers via --input <table>\n"
+
+   exit 1, "\nPlease either give in SRA identifier via --sra_id <SRA identifier> or a table with SRA identifiers via --input <table>\n" 
+   
 }
 
 /*
@@ -43,6 +45,6 @@ workflow {
  */
 workflow.onComplete {
 
-    log.info ( workflow.success ? "\nDone! Open the following reports in your browser --> $params.outdir/multiqc_report_${params.sra_id}.html and $params.tracedir/execution_report.html\n" : "Oops .. something went wrong" )
+    log.info ( workflow.success ? "\nDone! Open the following reports in your browser --> $params.outdir/multiqc_report.html and $params.tracedir/execution_report.html\n" : "Oops .. something went wrong" )
 
 }

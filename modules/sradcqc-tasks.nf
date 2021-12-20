@@ -44,7 +44,7 @@ process CONVERT {
 }
 
 process COMPRESS {
-    publishDir params.outdir, pattern:'*.fastq.gz' , mode:'copy'  
+    publishDir "${params.outdir}/${meta.id}", pattern:'*.fastq.gz', mode:'copy'  
     
     tag "${meta.id}"
     
@@ -68,23 +68,23 @@ process FASTQC {
     tuple val(meta), file(fastqgz_ch)
     
     output:
-    tuple val(meta), path("fastqc_${meta.id}_logs")
+    tuple val(meta), file('*_fastqc.{zip,html}')
     
     script:
     """
-    mkdir -p fastqc_${meta.id}_logs
-    fastqc -t $task.cpus -o fastqc_${meta.id}_logs $fastqgz_ch
+    fastqc -t $task.cpus $fastqgz_ch
     """
 
 }
 
 process MULTIQC {
-    publishDir params.outdir, saveAs: { filename -> "multiqc_report_${meta.id}.html" }, mode:'copy'
-	
+    publishDir "${params.outdir}/${meta.id}", mode:'copy'
+
     tag "${meta.id}"	
 	
     input:
-    tuple val(meta), path('*')
+    tuple val(meta), file(fastqc)
+    tuple val(meta), file(fastqc_trim)
 
     output:
     path('multiqc_report.html')
@@ -92,5 +92,87 @@ process MULTIQC {
     script:
     """
     multiqc .
+    """
+}
+
+process TRIM {
+   publishDir "${params.outdir}/${meta.id}", pattern: '*.txt', mode: 'copy'
+
+   tag "${meta.id}"
+   
+   input:
+   tuple val(meta), file(fastq_ch)
+   file(bbmap_adapters)
+   
+   output:
+   tuple val(meta), file('*.trim.fastq'), emit: trim
+   tuple val(meta), file('*.txt'), emit: txt
+   
+   script:
+   if(fastq_ch.size() == 1) {
+     """
+     bbduk.sh t=${task.cpus} \
+              in=${meta.id}.fastq \
+              out=${meta.id}.trim.fastq \
+              ref=${bbmap_adapters} \
+              ktrim=r qtrim=10 k=23 mink=11 hdist=1 \
+              maq=10 minlen=25 \
+              tpe tbo \
+              literal=AAAAAAAAAAAAAAAAAAAAAAA \
+              stats=${meta.id}.trimstats.txt \
+              refstats=${meta.id}.refstats.txt \
+              ehist=${meta.id}.ehist.txt
+     """
+
+   } else {
+     """
+     bbduk.sh t=${task.cpus} \
+              in=${meta.id}_1.fastq \
+              in2=${meta.id}_2.fastq \
+              out=${meta.id}_1.trim.fastq \
+              out2=${meta.id}_2.trim.fastq \
+              ref=${bbmap_adapters}  \
+              ktrim=r qtrim=10 k=23 mink=11 hdist=1 \
+              maq=10 minlen=25 \
+              tpe tbo \
+              literal=AAAAAAAAAAAAAAAAAAAAAAA \
+              stats=${meta.id}.trimstats.txt \
+              refstats=${meta.id}.refstats.txt \
+              ehist=${meta.id}.ehist.txt
+     """
+   }
+}
+
+process FASTQC_TRIM {
+
+    tag "${meta.id}"
+
+    input:
+    tuple val(meta), file(fastq_trim_ch)
+    
+    output:
+    tuple val(meta), file('*_fastqc.{zip,html}')
+    
+    script:
+    """
+    fastqc -t $task.cpus $fastq_trim_ch
+    """
+
+}
+
+process COMPRESS_TRIM {
+    publishDir "${params.outdir}/${meta.id}", pattern:'*.fastq.gz', mode:'copy'  
+    
+    tag "${meta.id}"
+    
+    input:
+    tuple val(meta), file(fastq_trim_ch)
+    
+    output:
+    tuple val(meta), file('*.fastq.gz')
+    
+    script:
+    """
+    pigz -p $task.cpus -f $fastq_trim_ch 
     """
 }
