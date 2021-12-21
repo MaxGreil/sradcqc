@@ -1,6 +1,6 @@
 # sradcqc
 
-Proof of concept of a SRA to compressed FASTQ (including quality control) pipeline with Nextflow.
+Proof of concept of a SRA to trimmed FASTQ (including quality control) pipeline with Nextflow.
 
 ## Prerequisites
 
@@ -82,7 +82,10 @@ This pipeline is designed to:
 The pipeline is built using [Nextflow](https://www.nextflow.io/)
 and processes data using the following steps:
 
-1. [fasterq-dump](https://github.com/ncbi/sra-tools/wiki/HowTo:-fasterq-dump) - extract the fastq file[s] from a sample SRA ID
-2. [pigz](https://zlib.net/pigz/) - compress downloaded fastq file[s] to .gz
-3. [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) - read quality control
-4. [MultiQC](https://multiqc.info) - aggregate report, describing results of the whole pipeline
+1. [entrez-direct](https://www.ncbi.nlm.nih.gov/books/NBK179288/) - retrieve identifiers from SRA database
+2. [prefetch](https://www.ncbi.nlm.nih.gov/sra/docs/sradownload/) - fetch data from SRA database in .sra file format
+3. [fasterq-dump](https://github.com/ncbi/sra-tools/wiki/HowTo:-fasterq-dump) - extract the .fastq file[s] from a sample SRA ID
+4. [pigz](https://zlib.net/pigz/) - compress downloaded .fastq file[s] to .gz
+5. [bbduk](https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/bbduk-guide/) - trim adapters in .fastq file[s]
+6. [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) - read quality control
+7. [MultiQC](https://multiqc.info) - aggregate report, describing results of the whole pipeline
