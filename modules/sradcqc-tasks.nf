@@ -84,6 +84,12 @@ process COMPRESS_TRIM {
     """
 }
 
+/*
+ * Process TRIM
+ * fastq_ch.size() == 1 -> single end sequence reads
+ * fastq_ch.size() >= 2 -> paired end sequence reads
+ */
+
 process TRIM {
    publishDir "${params.outdir}/${meta.id}", pattern: '*.txt', mode: 'copy'
 

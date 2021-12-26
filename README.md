@@ -18,14 +18,21 @@ Proof of concept of a SRA to trimmed FASTQ (including quality control) pipeline 
 
 ### Quick start
 
-Example run:
+You have two input methods:
+
 ```
 nextflow run main.nf --sra_id SRR000001
+```
 
+You can give in the SRA ID to download the files from directly. If the entered SRA ID belongs to a run, all .sra files belonging to the same experiment will be downloaded, too.
+
+```
 nextflow run main.nf --input input/example.tsv
 ```
 
-You must give in the SRA ID to download the .fastq files from. Optionally, you can specify the Nextflow output directory with flag `--outdir <folder>`. By default, all resulting files will be saved in folder `output` and folder `info` will contain all information about the last run nextflow session.
+Alternatively, you can give in the SRA ID to download the files from via table `input/example.tsv`. Only these specified SRA IDs will be downloaded.
+
+Optionally, you can specify the Nextflow output directory with flag `--outdir <folder>`. By default, all resulting files will be saved in folder `output` and folder `info` will contain all information about the last run nextflow session.
 
 Potential SRA IDs for download can be inspected using the [SRA Explorer](https://sra-explorer.info/).
 
