@@ -1,7 +1,7 @@
 /* 
  * include requires tasks 
  */
-include { SRAIDs; PREFETCH; CONVERT; COMPRESS; FASTQC; MULTIQC; TRIM; FASTQC_TRIM; COMPRESS_TRIM} from './sradcqc-tasks.nf'
+include { SRAIDs; PREFETCH; CONVERT; COMPRESS; FASTQC; MULTIQC; TRIM; FASTQC_TRIM; COMPRESS_TRIM} from '../modules/sradcqc-tasks.nf'
 
 /* 
  * define the data analysis workflow 
@@ -48,9 +48,9 @@ workflow sradcqcFlow {
       
       TRIM(CONVERT.out.meta, CONVERT.out.fastq)
       
-      FASTQC_TRIM(TRIM.out.meta, TRIM.out.trim)
-      
       COMPRESS_TRIM(TRIM.out.meta, TRIM.out.trim)
+      
+      FASTQC_TRIM(COMPRESS_TRIM.out.meta, COMPRESS_TRIM.out.fastqcgz)
       
       COMPRESS(CONVERT.out.meta, CONVERT.out.fastq)
       

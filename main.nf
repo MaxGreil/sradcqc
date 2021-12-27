@@ -9,7 +9,7 @@ nextflow.enable.dsl=2
  * Default pipeline parameters. They can be overriden on the command line eg.
  * given `params.foo` specify on the run command line `--foo some_value`.
  */
-params.sra_id = "" //SRR000001
+params.sra_id = "" //SRP055103
 params.input  = ""
 params.outdir = "output"
 
@@ -17,13 +17,14 @@ log.info """\
          S R A  T O  F A S T Q  -  C O M P R E S S  A N D  Q U A L I T Y  C O N T R O L  -  P I P E L I N E
          ===================================
          sra_id:     ${params.sra_id}
-         table:      ${params.input}
+         input:      ${params.input}
+         singleEnd:  ${params.singleEnd}
          outdir:     ${params.outdir}
          tracedir:   ${params.tracedir}
          """
          .stripIndent()
 
-include { sradcqcFlow } from './modules/sradcqc-flow.nf'
+include { sradcqcFlow } from './workflows/sradcqc-flow.nf'
 
 if ((!params.sra_id && !params.input) || (params.sra_id && params.input)) {
 
@@ -36,7 +37,7 @@ if ((!params.sra_id && !params.input) || (params.sra_id && params.input)) {
  */
 workflow {
 	
-    sradcqcFlow( params.sra_id, params.input)
+    sradcqcFlow( params.sra_id, params.input )
 
 }
 

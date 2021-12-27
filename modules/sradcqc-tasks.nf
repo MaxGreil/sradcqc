@@ -86,8 +86,8 @@ process COMPRESS_TRIM {
 
 /*
  * Process TRIM
- * fastq_ch.size() == 1 -> single end sequence reads
- * fastq_ch.size() >= 2 -> paired end sequence reads
+ * single end sequence reads -> fastq_ch.size() == 1
+ * paired end sequence reads -> fastq_ch.size() >= 2
  */
 
 process TRIM {
@@ -105,7 +105,7 @@ process TRIM {
    path('*.txt'), emit: txt
    
    script:
-   if(fastq_ch.size() == 1) {
+   if(params.singleEnd) {
      """
      bbduk.sh t=${task.cpus} \
               in=${meta.id}.fastq \
@@ -167,7 +167,6 @@ process FASTQC_TRIM {
     file(fastq_trim_ch)
     
     output:
-    tuple val(meta), file(bbmap_adapters), emit: meta
     path('*_fastqc.{zip,html}'), emit: fastqc_trim
     
     script:
