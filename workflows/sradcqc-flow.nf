@@ -25,8 +25,6 @@ workflow sradcqcFlow {
         Channel.fromPath(params.input, checkIfExists: true)
           .splitCsv(header: true, sep: '\t', strip: true)
           .map ({ row -> ['id': row.run_accession] })
-          .combine(bbmap_adapters)
-          .groupTuple()
           .set { singleSRAId }
       
       } else {
@@ -36,26 +34,24 @@ workflow sradcqcFlow {
         SRAIDs.out
       	  .splitText()
       	  .map { it -> ['id': it.trim()] }
-      	  .combine(bbmap_adapters)
-          .groupTuple()
       	  .set { singleSRAId }
       	
       }
       
       PREFETCH(singleSRAId)
       
-      CONVERT(PREFETCH.out.meta, PREFETCH.out.sra)
+      CONVERT(PREFETCH.out)
       
-      TRIM(CONVERT.out.meta, CONVERT.out.fastq)
+      TRIM(bbmap_adapters.first(), CONVERT.out)
       
-      COMPRESS_TRIM(TRIM.out.meta, TRIM.out.trim)
+      COMPRESS_TRIM(TRIM.out.trim)
       
-      FASTQC_TRIM(COMPRESS_TRIM.out.meta, COMPRESS_TRIM.out.fastqcgz)
+      FASTQC_TRIM(COMPRESS_TRIM.out)
       
-      COMPRESS(CONVERT.out.meta, CONVERT.out.fastq)
+      COMPRESS(CONVERT.out)
       
-      FASTQC(COMPRESS.out.meta, COMPRESS.out.fastqcgz)
+      FASTQC(COMPRESS.out)
       
-      MULTIQC(FASTQC.out.meta, FASTQC.out.fastqc, FASTQC_TRIM.out.fastqc_trim)
+      MULTIQC(FASTQC.out, FASTQC_TRIM.out)
       
 }

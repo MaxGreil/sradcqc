@@ -14,7 +14,7 @@ params.input  = ""
 params.outdir = "output"
 
 log.info """\
-         S R A  T O  F A S T Q  -  C O M P R E S S  A N D  Q U A L I T Y  C O N T R O L  -  P I P E L I N E
+         S R A  T O  F A S T Q  -  TRIM, C O M P R E S S  A N D  Q U A L I T Y  C O N T R O L  -  P I P E L I N E
          ===================================
          sra_id:     ${params.sra_id}
          input:      ${params.input}

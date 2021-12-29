@@ -14,11 +14,10 @@ process PREFETCH {
     tag "${meta.id}"
     
     input:
-    tuple val(meta), file(bbmap_adapters)
+    val(meta)
     
     output:
-    tuple val(meta), file(bbmap_adapters), emit: meta
-    path('*'), emit: sra
+    tuple val(meta), path('*')
     
     script:
     """
@@ -32,12 +31,10 @@ process CONVERT {
     tag "${meta.id}"
 
     input:
-    tuple val(meta), file(bbmap_adapters)
-    path('*')
+    tuple val(meta), path('*')
 
     output:
-    tuple val(meta), file(bbmap_adapters), emit: meta
-    path('*.fastq'), emit: fastq
+    tuple val(meta), path('*.fastq')
     
     script:
     """
@@ -52,12 +49,10 @@ process COMPRESS {
     tag "${meta.id}"
     
     input:
-    tuple val(meta), file(bbmap_adapters)
-    file(fastq_ch)
+    tuple val(meta), file(fastq_ch)
     
     output:
-    tuple val(meta), file(bbmap_adapters), emit: meta
-    path('*.fastq.gz'), emit: fastqcgz
+    tuple val(meta), path('*.fastq.gz')
     
     script:
     """
@@ -71,12 +66,10 @@ process COMPRESS_TRIM {
     tag "${meta.id}"
     
     input:
-    tuple val(meta), file(bbmap_adapters)
-    file(fastq_trim_ch)
+    tuple val(meta), file(fastq_trim_ch)
     
     output:
-    tuple val(meta), file(bbmap_adapters), emit: meta
-    path('*.fastq.gz'), emit: fastqcgz
+    tuple val(meta), path('*.fastq.gz')
     
     script:
     """
@@ -96,13 +89,12 @@ process TRIM {
    tag "${meta.id}"
    
    input:
-   tuple val(meta), file(bbmap_adapters)
-   file(fastq_ch)
+   file(bbmap_adapters) 
+   tuple val(meta), file(fastq_ch)
    
    output:
-   tuple val(meta), file(bbmap_adapters), emit: meta
-   path('*.trim.fastq'), emit: trim
-   path('*.txt'), emit: txt
+   tuple val(meta), path('*.trim.fastq'), emit: trim
+   tuple val(meta), path('*.txt'), emit: txt
    
    script:
    if(params.singleEnd) {
@@ -144,12 +136,10 @@ process FASTQC {
     tag "${meta.id}"
 
     input:
-    tuple val(meta), file(bbmap_adapters)
-    file(fastqgz_ch)
+    tuple val(meta), file(fastqgz_ch)
     
     output:
-    tuple val(meta), file(bbmap_adapters), emit: meta
-    path('*_fastqc.{zip,html}'), emit: fastqc
+    tuple val(meta), path('*_fastqc.{zip,html}')
     
     script:
     """
@@ -163,11 +153,10 @@ process FASTQC_TRIM {
     tag "${meta.id}"
 
     input:
-    tuple val(meta), file(bbmap_adapters)
-    file(fastq_trim_ch)
+    tuple val(meta), file(fastq_trim_ch)
     
     output:
-    path('*_fastqc.{zip,html}'), emit: fastqc_trim
+    path('*_fastqc.{zip,html}')
     
     script:
     """
@@ -182,8 +171,7 @@ process MULTIQC {
     tag "${meta.id}"
 
     input:
-    tuple val(meta), file(bbmap_adapters)
-    file(fastqc)
+    tuple val(meta), file(fastqc)
     file(fastqc_trim)
 
     output:
