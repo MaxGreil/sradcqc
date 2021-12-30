@@ -16,7 +16,8 @@ workflow sradcqcFlow {
       
       if ( params.bbmap_adapters ){
       
-         Channel.fromPath("${params.bbmap_adapters}")
+         Channel.fromPath( params.bbmap_adapters )
+           .ifEmpty { exit 1, "bbmap_adapters was empty - no input file supplied" }
            .set{ bbmap_adapters }
       }
       
@@ -42,7 +43,7 @@ workflow sradcqcFlow {
       
       CONVERT(PREFETCH.out)
       
-      TRIM(bbmap_adapters.first(), CONVERT.out)
+      TRIM(bbmap_adapters.first(), CONVERT.out)  //value channel, queue channel -> process termination determined by content of queue channel
       
       COMPRESS_TRIM(TRIM.out.trim)
       
@@ -52,6 +53,6 @@ workflow sradcqcFlow {
       
       FASTQC(COMPRESS.out)
       
-      MULTIQC(FASTQC.out, FASTQC_TRIM.out)
+      MULTIQC(FASTQC.out, FASTQC_TRIM.out) // doesn't work, different results grouped together, groupBy meta.id?
       
 }

@@ -153,14 +153,14 @@ process FASTQC_TRIM {
     tag "${meta.id}"
 
     input:
-    tuple val(meta), file(fastq_trim_ch)
+    tuple val(meta), file(fastqgz_trim_ch)
     
     output:
-    path('*_fastqc.{zip,html}')
+    tuple val(meta), path('*_fastqc.{zip,html}')
     
     script:
     """
-    fastqc -t $task.cpus $fastq_trim_ch
+    fastqc -t $task.cpus $fastqgz_trim_ch
     """
 
 }
@@ -171,8 +171,8 @@ process MULTIQC {
     tag "${meta.id}"
 
     input:
-    tuple val(meta), file(fastqc)
-    file(fastqc_trim)
+    tuple val(meta), file(fastqc) //error
+    tuple val(meta), file(fastqc_trim) // error
 
     output:
     path('multiqc_report.html')
