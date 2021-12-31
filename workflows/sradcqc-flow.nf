@@ -23,7 +23,7 @@ workflow sradcqcFlow {
       
       if(input) {
       
-        Channel.fromPath(params.input, checkIfExists: true)
+        Channel.fromPath( params.input, checkIfExists: true )
           .splitCsv(header: true, sep: '\t', strip: true)
           .map ({ row -> ['id': row.run_accession] })
           .set { singleSRAId }
@@ -53,6 +53,12 @@ workflow sradcqcFlow {
       
       FASTQC(COMPRESS.out)
       
-      MULTIQC(FASTQC.out, FASTQC_TRIM.out) // doesn't work, different results grouped together, groupBy meta.id?
+      FASTQC.out.collect() // collects all the items emitted by a channel to a List
+        .combine(FASTQC_TRIM.out.collect())
+        .flatten() // each single entry is emitted separately by the resulting channel
+        .toList()
+        .set{ results }
+      
+      MULTIQC(results)
       
 }

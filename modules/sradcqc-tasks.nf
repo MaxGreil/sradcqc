@@ -139,7 +139,7 @@ process FASTQC {
     tuple val(meta), file(fastqgz_ch)
     
     output:
-    tuple val(meta), path('*_fastqc.{zip,html}')
+    path('*_fastqc.{zip,html}')
     
     script:
     """
@@ -156,7 +156,7 @@ process FASTQC_TRIM {
     tuple val(meta), file(fastqgz_trim_ch)
     
     output:
-    tuple val(meta), path('*_fastqc.{zip,html}')
+    path('*_fastqc.{zip,html}')
     
     script:
     """
@@ -166,13 +166,10 @@ process FASTQC_TRIM {
 }
 
 process MULTIQC {
-    publishDir "${params.outdir}/${meta.id}", mode:'copy'
-
-    tag "${meta.id}"
+    publishDir "${params.outdir}", mode:'copy'
 
     input:
-    tuple val(meta), file(fastqc) //error
-    tuple val(meta), file(fastqc_trim) // error
+    path(result)
 
     output:
     path('multiqc_report.html')
