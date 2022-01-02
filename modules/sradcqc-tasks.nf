@@ -169,7 +169,8 @@ process MULTIQC {
     publishDir "${params.outdir}", mode:'copy'
 
     input:
-    path(result)
+    path(fastqc)
+    path(fastqc_trim)
 
     output:
     path('multiqc_report.html')
