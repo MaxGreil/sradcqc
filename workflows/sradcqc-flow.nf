@@ -53,6 +53,6 @@ workflow sradcqcFlow {
       
       FASTQC(COMPRESS.out) 
       
-      MULTIQC(FASTQC.out.collect(), FASTQC_TRIM.out.collect(), TRIM.out.trim.collect())
+      MULTIQC(FASTQC.out.collect(), FASTQC_TRIM.out.collect()) //TRIM.out.txt.collect()
       
 }

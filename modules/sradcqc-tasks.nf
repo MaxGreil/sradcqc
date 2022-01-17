@@ -94,7 +94,7 @@ process TRIM {
    
    output:
    tuple val(meta), path('*.trim.fastq'), emit: trim
-   tuple val(meta), path('*.txt'), emit: txt
+   path('*.txt'), emit: txt
    
    script:
    if(params.singleEnd) {
